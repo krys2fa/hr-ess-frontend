@@ -166,4 +166,13 @@ button:disabled {
     background: #90caf9;
     cursor: not-allowed;
 }
+
+@media (max-width: 768px) {
+  .payslip-container {
+    padding: 12px;
+  }
+  table, th, td {
+    font-size: 0.95rem;
+  }
+}
 </style>

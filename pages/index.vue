@@ -86,4 +86,16 @@ const dashboardItems = ref([
     text-decoration: underline;
     font-size: 0.95rem;
 }
+
+@media (max-width: 768px) {
+  .dashboard-cards {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .card {
+    min-width: 0;
+    width: 100%;
+    flex: 1 1 100%;
+  }
+}
 </style>
