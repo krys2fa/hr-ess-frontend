@@ -16,27 +16,27 @@
 </template>
 
 <script setup>
-import { useUserStore } from '~/stores/user'
-import { storeToRefs } from 'pinia'
+import { useUserStore } from "~/stores/user";
+import { storeToRefs } from "pinia";
 
-const userStore = useUserStore()
-const { user } = storeToRefs(userStore)
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
 const essLinks = [
-  { to: '/', label: 'Dashboard' },
-  { to: '/employee/profile', label: 'Profile' },
-  { to: '/employee/leave', label: 'Leave' },
-  { to: '/employee/payslip', label: 'Payslip' },
-  { to: '/employee/attendance', label: 'Attendance' },
-]
+  { to: "/", label: "Dashboard" },
+  { to: "/employee/profile", label: "Profile" },
+  { to: "/employee/leave", label: "Leave" },
+  { to: "/employee/payslip", label: "Payslip" },
+  { to: "/employee/attendance", label: "Attendance" },
+];
 const hrLinks = [
-  { to: '/hr/leave', label: 'HR Leave' },
-  { to: '/hr/payroll', label: 'HR Payroll' },
-  { to: '/hr/employees', label: 'Employees' },
-  { to: '/hr/structure', label: 'Departments & Roles' },
-  { to: '/hr/attendance-qr', label: 'Attendance QR' },
-  { to: '/hr/dashboard', label: 'HR Dashboard' },
-]
+  { to: "/hr/leave", label: "HR Leave" },
+  { to: "/hr/payroll", label: "HR Payroll" },
+  { to: "/hr/employees", label: "Employees" },
+  { to: "/hr/structure", label: "Departments & Roles" },
+  { to: "/hr/attendance-qr", label: "Attendance QR" },
+  { to: "/hr/dashboard", label: "HR Dashboard" },
+];
 </script>
 
 <style scoped>
