@@ -2,24 +2,41 @@
   <nav class="navbar">
     <ul class="nav-list">
       <li class="nav-section">Employee ESS</li>
-      <li><NuxtLink to="/">Dashboard</NuxtLink></li>
-      <li><NuxtLink to="/employee/profile">Profile</NuxtLink></li>
-      <li><NuxtLink to="/employee/leave">Leave</NuxtLink></li>
-      <li><NuxtLink to="/employee/payslip">Payslip</NuxtLink></li>
-      <li><NuxtLink to="/employee/attendance">Attendance</NuxtLink></li>
-      <li class="nav-section">HR Admin</li>
-      <li><NuxtLink to="/hr/leave">HR Leave</NuxtLink></li>
-      <li><NuxtLink to="/hr/payroll">HR Payroll</NuxtLink></li>
-      <li><NuxtLink to="/hr/employees">Employees</NuxtLink></li>
-      <li><NuxtLink to="/hr/structure">Departments & Roles</NuxtLink></li>
-      <li><NuxtLink to="/hr/attendance-qr">Attendance QR</NuxtLink></li>
-      <li><NuxtLink to="/hr/dashboard">HR Dashboard</NuxtLink></li>
+      <li v-for="link in essLinks" :key="link.to">
+        <NuxtLink :to="link.to">{{ link.label }}</NuxtLink>
+      </li>
+      <template v-if="user && user.role === 'admin'">
+        <li class="nav-section">HR Admin</li>
+        <li v-for="link in hrLinks" :key="link.to">
+          <NuxtLink :to="link.to">{{ link.label }}</NuxtLink>
+        </li>
+      </template>
     </ul>
   </nav>
 </template>
 
 <script setup>
-// No script needed for static links
+import { useUserStore } from '~/stores/user'
+import { storeToRefs } from 'pinia'
+
+const userStore = useUserStore()
+const { user } = storeToRefs(userStore)
+
+const essLinks = [
+  { to: '/', label: 'Dashboard' },
+  { to: '/employee/profile', label: 'Profile' },
+  { to: '/employee/leave', label: 'Leave' },
+  { to: '/employee/payslip', label: 'Payslip' },
+  { to: '/employee/attendance', label: 'Attendance' },
+]
+const hrLinks = [
+  { to: '/hr/leave', label: 'HR Leave' },
+  { to: '/hr/payroll', label: 'HR Payroll' },
+  { to: '/hr/employees', label: 'Employees' },
+  { to: '/hr/structure', label: 'Departments & Roles' },
+  { to: '/hr/attendance-qr', label: 'Attendance QR' },
+  { to: '/hr/dashboard', label: 'HR Dashboard' },
+]
 </script>
 
 <style scoped>

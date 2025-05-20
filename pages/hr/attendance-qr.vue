@@ -4,37 +4,66 @@
     <form @submit.prevent="generateQR" class="flex flex-col gap-4 max-w-md">
       <div>
         <label class="block mb-1">Branch</label>
-        <select v-model="branch" class="w-full border rounded px-3 py-2" required>
+        <select
+          v-model="branch"
+          class="w-full border rounded px-3 py-2"
+          required
+        >
           <option v-for="b in branches" :key="b" :value="b">{{ b }}</option>
         </select>
       </div>
       <div>
         <label class="block mb-1">Date</label>
-        <input v-model="date" type="date" class="w-full border rounded px-3 py-2" required />
+        <input
+          v-model="date"
+          type="date"
+          class="w-full border rounded px-3 py-2"
+          required
+        />
       </div>
-      <button class="action-btn add self-start" type="submit">Generate QR Code</button>
+      <button class="action-btn add self-start" type="submit">
+        Generate QR Code
+      </button>
     </form>
     <div v-if="qrValue" class="mt-6 flex flex-col items-center gap-2">
-      <qrcode-vue :value="qrValue" :size="220" background="#fff" foreground="#2563eb" />
-      <div class="text-gray-500 text-sm">Scan this QR code to check in for {{ branch }} on {{ date }}</div>
+      <qrcode-vue
+        :value="qrValue"
+        :size="220"
+        background="#fff"
+        foreground="#2563eb"
+      />
+      <div class="text-gray-500 text-sm">
+        Scan this QR code to check in for {{ branch }} on {{ date }}
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import QrcodeVue from 'qrcode.vue'
+import { ref } from "vue";
+import QrcodeVue from "qrcode.vue";
 
 const branches = [
-  'Accra Main', 'Kumasi', 'Takoradi', 'Tamale', 'Tema', 'Ho', 'Sunyani', 'Cape Coast', 'Koforidua', 'Wa', 'Bolgatanga', 'NIB HQ'
-]
-const branch = ref(branches[0])
-const date = ref(new Date().toISOString().slice(0, 10))
-const qrValue = ref('')
+  "Accra Main",
+  "Kumasi",
+  "Takoradi",
+  "Tamale",
+  "Tema",
+  "Ho",
+  "Sunyani",
+  "Cape Coast",
+  "Koforidua",
+  "Wa",
+  "Bolgatanga",
+  "NIB HQ",
+];
+const branch = ref(branches[0]);
+const date = ref(new Date().toISOString().slice(0, 10));
+const qrValue = ref("");
 
 function generateQR() {
   // QR value can include branch and date for validation
-  qrValue.value = `NIB-ATTENDANCE|${branch.value}|${date.value}`
+  qrValue.value = `NIB-ATTENDANCE|${branch.value}|${date.value}`;
 }
 </script>
 
@@ -54,7 +83,8 @@ function generateQR() {
   filter: brightness(0.95);
 }
 @media (max-width: 768px) {
-  .space-y-4, .space-y-6 {
+  .space-y-4,
+  .space-y-6 {
     padding: 0 8px;
   }
   .grid {
@@ -65,7 +95,8 @@ function generateQR() {
     flex-direction: column;
     gap: 0.5rem;
   }
-  .rounded-xl, .rounded-lg {
+  .rounded-xl,
+  .rounded-lg {
     border-radius: 0.5rem;
   }
 }

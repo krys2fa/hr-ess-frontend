@@ -6,16 +6,25 @@
     </button>
     <div class="bg-white rounded-xl p-4 shadow">
       <div class="grid grid-cols-5 font-bold border-b pb-2 table-header">
-        <span>Name</span><span>Month</span><span>Gross</span><span>Net</span><span>Actions</span>
+        <span>Name</span><span>Month</span><span>Gross</span><span>Net</span
+        ><span>Actions</span>
       </div>
-      <div v-for="pay in payrolls" :key="pay.id" class="grid grid-cols-5 border-b py-2 items-center">
+      <div
+        v-for="pay in payrolls"
+        :key="pay.id"
+        class="grid grid-cols-5 border-b py-2 items-center"
+      >
         <span>{{ pay.name }}</span>
         <span>{{ pay.month }}</span>
         <span>${{ pay.gross }}</span>
         <span>${{ pay.net }}</span>
         <span class="flex gap-2">
-          <button class="action-btn edit" @click="openEditModal(pay)"><PencilSquareIcon class="w-5 h-5" /> Edit</button>
-          <button class="action-btn delete" @click="openDeleteModal(pay)"><TrashIcon class="w-5 h-5" /> Delete</button>
+          <button class="action-btn edit" @click="openEditModal(pay)">
+            <PencilSquareIcon class="w-5 h-5" /> Edit
+          </button>
+          <button class="action-btn delete" @click="openDeleteModal(pay)">
+            <TrashIcon class="w-5 h-5" /> Delete
+          </button>
         </span>
       </div>
     </div>
@@ -25,28 +34,64 @@
       <Dialog as="div" class="relative z-50" @close="closeModal">
         <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
         <div class="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-            <DialogTitle class="text-lg font-bold mb-4">{{ isEdit ? 'Edit Payroll' : 'Add Payroll' }}</DialogTitle>
-            <form @submit.prevent="isEdit ? updatePayroll() : addPayroll()" class="space-y-4">
+          <DialogPanel
+            class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg"
+          >
+            <DialogTitle class="text-lg font-bold mb-4">{{
+              isEdit ? "Edit Payroll" : "Add Payroll"
+            }}</DialogTitle>
+            <form
+              @submit.prevent="isEdit ? updatePayroll() : addPayroll()"
+              class="space-y-4"
+            >
               <div>
                 <label class="block mb-1">Name</label>
-                <input v-model="modalData.name" class="w-full border rounded px-3 py-2" required />
+                <input
+                  v-model="modalData.name"
+                  class="w-full border rounded px-3 py-2"
+                  required
+                />
               </div>
               <div>
                 <label class="block mb-1">Month</label>
-                <input v-model="modalData.month" class="w-full border rounded px-3 py-2" required />
+                <input
+                  v-model="modalData.month"
+                  class="w-full border rounded px-3 py-2"
+                  required
+                />
               </div>
               <div>
                 <label class="block mb-1">Gross</label>
-                <input v-model.number="modalData.gross" type="number" class="w-full border rounded px-3 py-2" required />
+                <input
+                  v-model.number="modalData.gross"
+                  type="number"
+                  class="w-full border rounded px-3 py-2"
+                  required
+                />
               </div>
               <div>
                 <label class="block mb-1">Net</label>
-                <input v-model.number="modalData.net" type="number" class="w-full border rounded px-3 py-2" required />
+                <input
+                  v-model.number="modalData.net"
+                  type="number"
+                  class="w-full border rounded px-3 py-2"
+                  required
+                />
               </div>
               <div class="flex justify-end gap-2 mt-4">
-                <button type="button" class="px-4 py-2 bg-gray-200 rounded" @click="closeModal">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">{{ isEdit ? 'Update' : 'Add' }}</button>
+                <button
+                  type="button"
+                  class="px-4 py-2 bg-gray-200 rounded"
+                  @click="closeModal"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  class="px-4 py-2 bg-blue-600 text-white rounded"
+                >
+                  {{ isEdit ? "Update" : "Add" }}
+                </button>
               </div>
             </form>
           </DialogPanel>
@@ -59,12 +104,31 @@
       <Dialog as="div" class="relative z-50" @close="closeDeleteModal">
         <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
         <div class="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel class="bg-white rounded-lg p-6 w-full max-w-sm shadow-lg">
-            <DialogTitle class="text-lg font-bold mb-4">Delete Payroll</DialogTitle>
-            <p>Are you sure you want to delete <strong>{{ modalData.name }}</strong>'s payroll for <strong>{{ modalData.month }}</strong>?</p>
+          <DialogPanel
+            class="bg-white rounded-lg p-6 w-full max-w-sm shadow-lg"
+          >
+            <DialogTitle class="text-lg font-bold mb-4"
+              >Delete Payroll</DialogTitle
+            >
+            <p>
+              Are you sure you want to delete
+              <strong>{{ modalData.name }}</strong
+              >'s payroll for <strong>{{ modalData.month }}</strong
+              >?
+            </p>
             <div class="flex justify-end gap-2 mt-6">
-              <button class="px-4 py-2 bg-gray-200 rounded" @click="closeDeleteModal">Cancel</button>
-              <button class="px-4 py-2 bg-red-500 text-white rounded" @click="deletePayroll">Delete</button>
+              <button
+                class="px-4 py-2 bg-gray-200 rounded"
+                @click="closeDeleteModal"
+              >
+                Cancel
+              </button>
+              <button
+                class="px-4 py-2 bg-red-500 text-white rounded"
+                @click="deletePayroll"
+              >
+                Delete
+              </button>
             </div>
           </DialogPanel>
         </div>
@@ -74,39 +138,48 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
-import { Dialog, DialogPanel, DialogTitle, TransitionRoot } from '@headlessui/vue'
-import { PencilSquareIcon, TrashIcon, PlusIcon } from '@heroicons/vue/24/outline'
+import { ref, reactive } from "vue";
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  TransitionRoot,
+} from "@headlessui/vue";
+import {
+  PencilSquareIcon,
+  TrashIcon,
+  PlusIcon,
+} from "@heroicons/vue/24/outline";
 
 const payrolls = ref([
-  { id: 1, name: 'Chris A.', month: 'May 2025', gross: 3000, net: 2500 },
-])
+  { id: 1, name: "Chris A.", month: "May 2025", gross: 3000, net: 2500 },
+]);
 
-const showModal = ref(false)
-const showDeleteModal = ref(false)
-const isEdit = ref(false)
+const showModal = ref(false);
+const showDeleteModal = ref(false);
+const isEdit = ref(false);
 const modalData = reactive({
   id: null as number | null,
-  name: '',
-  month: '',
+  name: "",
+  month: "",
   gross: 0,
   net: 0,
-})
+});
 
 function openAddModal() {
-  isEdit.value = false
-  Object.assign(modalData, { id: null, name: '', month: '', gross: 0, net: 0 })
-  showModal.value = true
+  isEdit.value = false;
+  Object.assign(modalData, { id: null, name: "", month: "", gross: 0, net: 0 });
+  showModal.value = true;
 }
 
 function openEditModal(pay: any) {
-  isEdit.value = true
-  Object.assign(modalData, pay)
-  showModal.value = true
+  isEdit.value = true;
+  Object.assign(modalData, pay);
+  showModal.value = true;
 }
 
 function closeModal() {
-  showModal.value = false
+  showModal.value = false;
 }
 
 function addPayroll() {
@@ -116,12 +189,12 @@ function addPayroll() {
     month: modalData.month,
     gross: modalData.gross,
     net: modalData.net,
-  })
-  closeModal()
+  });
+  closeModal();
 }
 
 function updatePayroll() {
-  const idx = payrolls.value.findIndex(p => p.id === modalData.id)
+  const idx = payrolls.value.findIndex((p) => p.id === modalData.id);
   if (idx !== -1) {
     payrolls.value[idx] = {
       id: modalData.id as number, // Ensure id is number
@@ -129,23 +202,23 @@ function updatePayroll() {
       month: modalData.month,
       gross: modalData.gross,
       net: modalData.net,
-    }
+    };
   }
-  closeModal()
+  closeModal();
 }
 
 function openDeleteModal(pay: any) {
-  Object.assign(modalData, pay)
-  showDeleteModal.value = true
+  Object.assign(modalData, pay);
+  showDeleteModal.value = true;
 }
 
 function closeDeleteModal() {
-  showDeleteModal.value = false
+  showDeleteModal.value = false;
 }
 
 function deletePayroll() {
-  payrolls.value = payrolls.value.filter(p => p.id !== modalData.id)
-  closeDeleteModal()
+  payrolls.value = payrolls.value.filter((p) => p.id !== modalData.id);
+  closeDeleteModal();
 }
 </script>
 
@@ -180,7 +253,8 @@ function deletePayroll() {
 }
 
 @media (max-width: 768px) {
-  .space-y-4, .space-y-6 {
+  .space-y-4,
+  .space-y-6 {
     padding: 0 8px;
   }
   .grid {
@@ -191,7 +265,8 @@ function deletePayroll() {
     flex-direction: column;
     gap: 0.5rem;
   }
-  .rounded-xl, .rounded-lg {
+  .rounded-xl,
+  .rounded-lg {
     border-radius: 0.5rem;
   }
 }

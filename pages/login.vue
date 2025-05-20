@@ -1,108 +1,75 @@
 <template>
-    <div class="login-container">
-        <form class="login-form" @submit.prevent="handleLogin">
-            <h2>Login</h2>
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input
-                    id="username"
-                    v-model="username"
-                    type="text"
-                    required
-                    autocomplete="username"
-                />
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input
-                    id="password"
-                    v-model="password"
-                    type="password"
-                    required
-                    autocomplete="current-password"
-                />
-            </div>
-            <button type="submit" :disabled="loading">
-                {{ loading ? 'Logging in...' : 'Login' }}
-            </button>
-            <p v-if="error" class="error">{{ error }}</p>
-        </form>
+  <div class="max-w-md mx-auto mt-16 p-6 bg-white rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">Login</h1>
+    <form @submit.prevent="login">
+      <input
+        v-model="form.email"
+        type="email"
+        placeholder="Email"
+        class="input"
+        required
+      />
+      <input
+        v-model="form.password"
+        type="password"
+        placeholder="Password"
+        class="input"
+        required
+      />
+      <button type="submit" class="btn-primary w-full">Login</button>
+    </form>
+    <div v-if="message" class="mt-2 text-blue-700">{{ message }}</div>
+    <div class="mt-4 text-sm text-center">
+      Don't have an account?
+      <NuxtLink to="/signup" class="text-blue-600 underline">Register</NuxtLink>
     </div>
+  </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "~/stores/user";
 
-const username = ref('')
-const password = ref('')
-const loading = ref(false)
-const error = ref('')
+const form = reactive({
+  email: "",
+  password: "",
+});
+const message = ref("");
+const router = useRouter();
+const userStore = useUserStore();
 
-const handleLogin = async () => {
-    error.value = ''
-    loading.value = true
-    try {
-        // Replace with your actual login logic/API call
-        if (username.value === 'admin' && password.value === 'password') {
-            // Redirect or set auth state here
-            alert('Login successful!')
-        } else {
-            throw new Error('Invalid username or password')
-        }
-    } catch (err) {
-        error.value = err.message
-    } finally {
-        loading.value = false
-    }
+function login() {
+  // Simulate login (in real app, call API)
+  if (form.email && form.password) {
+    // Demo: admin if email contains 'admin', else regular user
+    const role = form.email.includes("admin") ? "admin" : "employee";
+    userStore.setUser({ id: 1, name: form.email.split("@")[0], role });
+    message.value = "Login successful! Redirecting...";
+    setTimeout(() => {
+      router.push("/");
+    }, 1000);
+  } else {
+    message.value = "Please enter your email and password.";
+  }
 }
 </script>
 
 <style scoped>
-.login-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f5f6fa;
+.input {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.375rem;
 }
-.login-form {
-    background: #fff;
-    padding: 2rem 2.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    width: 320px;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-input[type="text"],
-input[type="password"] {
-    padding: 0.5rem;
-    border: 1px solid #dcdde1;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-button {
-    padding: 0.5rem;
-    background: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-}
-button:disabled {
-    background: #a5b1c2;
-    cursor: not-allowed;
-}
-.error {
-    color: #e74c3c;
-    font-size: 0.95rem;
-    margin-top: 0.5rem;
+.btn-primary {
+  background-color: #1e40af;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
 }
 </style>

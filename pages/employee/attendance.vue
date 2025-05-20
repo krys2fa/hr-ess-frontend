@@ -2,14 +2,21 @@
   <div class="space-y-6">
     <h1 class="text-2xl font-bold mb-4">Attendance</h1>
     <div class="flex flex-col gap-4 items-center">
-      <button class="action-btn add" @click="openScanner">Check In with QR Code</button>
-      <div v-if="attendanceRecord" class="bg-green-100 text-green-800 rounded p-4 mt-4">
+      <button class="action-btn add" @click="openScanner">
+        Check In with QR Code
+      </button>
+      <div
+        v-if="attendanceRecord"
+        class="bg-green-100 text-green-800 rounded p-4 mt-4"
+      >
         <div class="font-bold">Attendance Recorded!</div>
         <div>Date: {{ attendanceRecord.date }}</div>
         <div>Time: {{ attendanceRecord.time }}</div>
         <div>Location: {{ attendanceRecord.location }}</div>
       </div>
-      <div v-if="error" class="bg-red-100 text-red-800 rounded p-4 mt-4">{{ error }}</div>
+      <div v-if="error" class="bg-red-100 text-red-800 rounded p-4 mt-4">
+        {{ error }}
+      </div>
     </div>
 
     <!-- QR Scanner Modal -->
@@ -17,14 +24,34 @@
       <Dialog as="div" class="relative z-50" @close="closeScanner">
         <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
         <div class="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-            <DialogTitle class="text-lg font-bold mb-4">Scan QR Code to Check In</DialogTitle>
-            <div ref="videoContainer" class="w-full h-64 bg-gray-100 rounded flex items-center justify-center">
-              <video ref="video" class="w-full h-full object-cover rounded" autoplay muted playsinline></video>
+          <DialogPanel
+            class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg"
+          >
+            <DialogTitle class="text-lg font-bold mb-4"
+              >Scan QR Code to Check In</DialogTitle
+            >
+            <div
+              ref="videoContainer"
+              class="w-full h-64 bg-gray-100 rounded flex items-center justify-center"
+            >
+              <video
+                ref="video"
+                class="w-full h-full object-cover rounded"
+                autoplay
+                muted
+                playsinline
+              ></video>
             </div>
-            <div v-if="scanning" class="text-center mt-2 text-gray-500">Scanning...</div>
+            <div v-if="scanning" class="text-center mt-2 text-gray-500">
+              Scanning...
+            </div>
             <div class="flex justify-end gap-2 mt-4">
-              <button class="px-4 py-2 bg-gray-200 rounded" @click="closeScanner">Cancel</button>
+              <button
+                class="px-4 py-2 bg-gray-200 rounded"
+                @click="closeScanner"
+              >
+                Cancel
+              </button>
             </div>
           </DialogPanel>
         </div>
@@ -34,42 +61,51 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeUnmount } from 'vue'
-import { Dialog, DialogPanel, DialogTitle, TransitionRoot } from '@headlessui/vue'
-import { BrowserQRCodeReader } from '@zxing/browser'
+import { ref, onBeforeUnmount } from "vue";
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  TransitionRoot,
+} from "@headlessui/vue";
+import { BrowserQRCodeReader } from "@zxing/browser";
 
-const showScanner = ref(false)
-const scanning = ref(false)
-const error = ref('')
-const attendanceRecord = ref<any>(null)
-const video = ref<HTMLVideoElement | null>(null)
-const videoContainer = ref<HTMLDivElement | null>(null)
-let codeReader: BrowserQRCodeReader | null = null
+const showScanner = ref(false);
+const scanning = ref(false);
+const error = ref("");
+const attendanceRecord = ref<any>(null);
+const video = ref<HTMLVideoElement | null>(null);
+const videoContainer = ref<HTMLDivElement | null>(null);
+let codeReader: BrowserQRCodeReader | null = null;
 
 function openScanner() {
-  showScanner.value = true
-  error.value = ''
-  startScanner()
+  showScanner.value = true;
+  error.value = "";
+  startScanner();
 }
 
 function closeScanner() {
-  showScanner.value = false
-  stopScanner()
+  showScanner.value = false;
+  stopScanner();
 }
 
 async function startScanner() {
-  scanning.value = true
-  codeReader = new BrowserQRCodeReader()
+  scanning.value = true;
+  codeReader = new BrowserQRCodeReader();
   try {
-    const previewElem = video.value
-    if (!previewElem) return
-    const result = await codeReader.decodeOnceFromVideoDevice(undefined, previewElem)
-    scanning.value = false
-    await handleScan(result.getText())
-    closeScanner()
+    const previewElem = video.value;
+    if (!previewElem) return;
+    const result = await codeReader.decodeOnceFromVideoDevice(
+      undefined,
+      previewElem
+    );
+    scanning.value = false;
+    await handleScan(result.getText());
+    closeScanner();
   } catch (e: any) {
-    scanning.value = false
-    if (e && e.name !== 'NotFoundException') error.value = 'Failed to scan QR code.'
+    scanning.value = false;
+    if (e && e.name !== "NotFoundException")
+      error.value = "Failed to scan QR code.";
   }
 }
 
@@ -83,35 +119,35 @@ function stopScanner() {
 
 async function handleScan(qrText: string) {
   // Simulate QR code validation (e.g., QR contains today's date and branch info)
-  const today = new Date().toISOString().slice(0, 10)
+  const today = new Date().toISOString().slice(0, 10);
   if (!qrText.includes(today)) {
-    error.value = 'Invalid or expired QR code.'
-    return
+    error.value = "Invalid or expired QR code.";
+    return;
   }
   // Get geolocation
   if (!navigator.geolocation) {
-    error.value = 'Geolocation not supported.'
-    return
+    error.value = "Geolocation not supported.";
+    return;
   }
   navigator.geolocation.getCurrentPosition(
-    pos => {
-      const { latitude, longitude } = pos.coords
+    (pos) => {
+      const { latitude, longitude } = pos.coords;
       attendanceRecord.value = {
         date: today,
         time: new Date().toLocaleTimeString(),
         location: `Lat: ${latitude.toFixed(5)}, Lng: ${longitude.toFixed(5)}`,
-      }
-      error.value = ''
+      };
+      error.value = "";
     },
     () => {
-      error.value = 'Could not get your location.'
+      error.value = "Could not get your location.";
     }
-  )
+  );
 }
 
 onBeforeUnmount(() => {
-  stopScanner()
-})
+  stopScanner();
+});
 </script>
 
 <style scoped>

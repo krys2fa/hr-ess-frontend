@@ -29,8 +29,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { Bar, Pie } from 'vue-chartjs'
+import { ref, computed } from "vue";
+import { Bar, Pie } from "vue-chartjs";
 import {
   Chart,
   CategoryScale,
@@ -39,47 +39,55 @@ import {
   Title,
   Tooltip,
   Legend,
-  ArcElement
-} from 'chart.js'
+  ArcElement,
+} from "chart.js";
 
-Chart.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement)
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+);
 
 // Simulated stats (replace with API calls in real app)
 const stats = ref({
   totalEmployees: 42,
   onLeaveToday: 3,
   pendingLeaves: 5,
-})
+});
 
 const leaveStatusData = {
-  labels: ['Approved', 'Pending', 'Rejected'],
+  labels: ["Approved", "Pending", "Rejected"],
   datasets: [
     {
-      label: 'Requests',
+      label: "Requests",
       data: [20, 5, 2],
-      backgroundColor: ['#22c55e', '#fbbf24', '#ef4444'],
+      backgroundColor: ["#22c55e", "#fbbf24", "#ef4444"],
     },
   ],
-}
+};
 const barOptions = {
   responsive: true,
   plugins: { legend: { display: false } },
-}
+};
 
 const departmentData = {
-  labels: ['Retail', 'Corporate', 'IT', 'HR', 'Operations'],
+  labels: ["Retail", "Corporate", "IT", "HR", "Operations"],
   datasets: [
     {
-      label: 'Employees',
+      label: "Employees",
       data: [12, 8, 7, 6, 9],
-      backgroundColor: ['#2563eb', '#f59e42', '#10b981', '#a21caf', '#f43f5e'],
+      backgroundColor: ["#2563eb", "#f59e42", "#10b981", "#a21caf", "#f43f5e"],
     },
   ],
-}
+};
 const pieOptions = {
   responsive: true,
-  plugins: { legend: { position: 'bottom' } },
-}
+  plugins: { legend: { position: "bottom" } },
+};
 </script>
 
 <style scoped>
@@ -102,7 +110,8 @@ const pieOptions = {
 }
 
 @media (max-width: 768px) {
-  .space-y-4, .space-y-6 {
+  .space-y-4,
+  .space-y-6 {
     padding: 0 8px;
   }
   .grid {
@@ -113,7 +122,8 @@ const pieOptions = {
     flex-direction: column;
     gap: 0.5rem;
   }
-  .rounded-xl, .rounded-lg {
+  .rounded-xl,
+  .rounded-lg {
     border-radius: 0.5rem;
   }
 }
